@@ -2,10 +2,11 @@ package com.ethanhua.skeleton;
 
 import android.support.annotation.ArrayRes;
 import android.support.annotation.ColorRes;
-import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+
+import com.facebook.shimmer.Shimmer;
 
 /**
  * Created by ethanhua on 2017/7/29.
@@ -25,10 +26,8 @@ public class RecyclerViewSkeletonScreen implements SkeletonScreen {
         mSkeletonAdapter.setItemCount(builder.mItemCount);
         mSkeletonAdapter.setLayoutReference(builder.mItemResID);
         mSkeletonAdapter.setArrayOfLayoutReferences(builder.mItemsResIDArray);
-        mSkeletonAdapter.shimmer(builder.mShimmer);
-        mSkeletonAdapter.setShimmerColor(builder.mShimmerColor);
-        mSkeletonAdapter.setShimmerAngle(builder.mShimmerAngle);
-        mSkeletonAdapter.setShimmerDuration(builder.mShimmerDuration);
+        mSkeletonAdapter.shimmerAnimate(builder.mShimmerAnimate);
+        mSkeletonAdapter.setShimmer(builder.generateShimmer());
         mRecyclerViewFrozen = builder.mFrozen;
     }
 
@@ -46,20 +45,26 @@ public class RecyclerViewSkeletonScreen implements SkeletonScreen {
     }
 
     public static class Builder {
-        private RecyclerView.Adapter mActualAdapter;
         private final RecyclerView mRecyclerView;
-        private boolean mShimmer = true;
+        private RecyclerView.Adapter mActualAdapter;
         private int mItemCount = 10;
         private int mItemResID = R.layout.layout_default_item_skeleton;
         private int[] mItemsResIDArray;
-        private int mShimmerColor;
-        private int mShimmerDuration = 1000;
-        private int mShimmerAngle = 20;
+        private boolean mShimmerAnimate = true;
+        private boolean mAutoStart;
+        private int mShimmerBaseColor;
+        private int mShimmerHighlightColor;
+        private boolean mShimmerColored;
+        private int mDuration = 1000;
+        private int mShimmerShape;
+        private int mDirection;
+        private Shimmer mShimmer;
         private boolean mFrozen = true;
 
         public Builder(RecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;
-            this.mShimmerColor = ContextCompat.getColor(recyclerView.getContext(), R.color.shimmer_color);
+            this.mShimmerHighlightColor = ContextCompat.getColor(recyclerView.getContext(), R.color.shimmer_highlight_color);
+            this.mShimmerBaseColor = ContextCompat.getColor(recyclerView.getContext(), R.color.shimmer_base_color);
         }
 
         /**
@@ -79,21 +84,13 @@ public class RecyclerViewSkeletonScreen implements SkeletonScreen {
         }
 
         /**
-         * @param shimmer whether show shimmer animation
-         */
-        public Builder shimmer(boolean shimmer) {
-            this.mShimmer = shimmer;
-            return this;
-        }
-
-        /**
          * the duration of the animation , the time it will take for the highlight to move from one end of the layout
          * to the other.
          *
-         * @param shimmerDuration Duration of the shimmer animation, in milliseconds
+         * @param duration Duration of the shimmer animation, in milliseconds
          */
-        public Builder duration(int shimmerDuration) {
-            this.mShimmerDuration = shimmerDuration;
+        public Builder duration(int duration) {
+            this.mDuration = duration;
             return this;
         }
 
@@ -101,17 +98,66 @@ public class RecyclerViewSkeletonScreen implements SkeletonScreen {
          * @param shimmerColor the shimmer color
          */
         public Builder color(@ColorRes int shimmerColor) {
-            this.mShimmerColor = ContextCompat.getColor(mRecyclerView.getContext(), shimmerColor);
+            this.mShimmerHighlightColor = ContextCompat.getColor(mRecyclerView.getContext(), shimmerColor);
             return this;
         }
 
         /**
-         * @param shimmerAngle the angle of the shimmer effect in clockwise direction in degrees.
+         * @param shimmer whether show shimmer animation
          */
-        public Builder angle(@IntRange(from = 0, to = 30) int shimmerAngle) {
-            this.mShimmerAngle = shimmerAngle;
+        public Builder shimmerAnimate(boolean shimmer) {
+            this.mShimmerAnimate = shimmer;
             return this;
         }
+
+        public Builder shape(@Shimmer.Shape int shape) {
+            this.mShimmerShape = shape;
+            return this;
+        }
+
+        public Builder direction(@Shimmer.Direction int direction) {
+            this.mDirection = direction;
+            return this;
+        }
+
+        public Builder autoStart(boolean autoStart) {
+            this.mAutoStart = autoStart;
+            return this;
+        }
+
+        public Builder shimmerColored(boolean shimmerColored) {
+            this.mShimmerColored = shimmerColored;
+            return this;
+        }
+
+        public Builder shimmerBaseColor(@ColorRes int shimmerBaseColor) {
+            this.mShimmerBaseColor = shimmerBaseColor;
+            return this;
+        }
+
+        public Shimmer generateShimmer() {
+            if (mShimmer == null) {
+                Shimmer.Builder shimmerBuilder;
+                if (mShimmerColored) {
+                    shimmerBuilder = new Shimmer.ColorHighlightBuilder()
+                            .setBaseColor(mShimmerBaseColor)
+                            .setHighlightColor(mShimmerHighlightColor);
+                } else {
+                    shimmerBuilder = new Shimmer.AlphaHighlightBuilder();
+                }
+                shimmerBuilder.setAutoStart(mAutoStart);
+                shimmerBuilder.setShape(mShimmerShape);
+                shimmerBuilder.setDuration(mDuration);
+                shimmerBuilder.setDirection(mDirection);
+
+
+                mShimmer = shimmerBuilder.build();
+            }
+
+            return mShimmer;
+        }
+        //
+
 
         /**
          * @param skeletonLayoutResID the loading skeleton layoutResID

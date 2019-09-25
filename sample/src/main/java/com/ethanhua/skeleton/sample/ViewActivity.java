@@ -60,8 +60,7 @@ public class ViewActivity extends AppCompatActivity {
             skeletonScreen = Skeleton.bind(rootView)
                     .load(R.layout.activity_view_skeleton)
                     .duration(1000)
-                    .color(R.color.shimmer_color)
-                    .angle(0)
+                    .color(R.color.shimmer_color_for_image)
                     .show();
         }
         if (TYPE_IMG_LOADING.equals(mType)) {

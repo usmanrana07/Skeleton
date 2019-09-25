@@ -1,4 +1,6 @@
 <resources>
     <color name="light_transparent">#16000000</color>
     <color name="dark_transparent">#24000000</color>
+    <color name="shimmer_highlight_color">#ECF0F1</color>
+    <color name="shimmer_base_color">#f2f2f2</color>
 </resources>

@@ -48,8 +48,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
             NewsAdapter adapter = new NewsAdapter();
             final SkeletonScreen skeletonScreen = Skeleton.bind(recyclerView)
                     .adapter(adapter)
-                    .shimmer(true)
-                    .angle(20)
+                    .shimmerAnimate(true)
                     .frozen(false)
                     .duration(1200)
                     .count(10)
@@ -69,7 +68,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
             final SkeletonScreen skeletonScreen = Skeleton.bind(recyclerView)
                     .adapter(adapter)
                     .load(R.layout.item_skeleton_person)
-                    .shimmer(false)
+                    .shimmerAnimate(false)
                     .show();
             recyclerView.postDelayed(new Runnable() {
                 @Override

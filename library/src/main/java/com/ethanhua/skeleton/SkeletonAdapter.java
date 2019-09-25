@@ -1,11 +1,11 @@
 package com.ethanhua.skeleton;
 
-import android.support.annotation.IntRange;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import io.supercharge.shimmerlayout.ShimmerLayout;
+import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 /**
  * Created by ethanhua on 2017/7/29.
@@ -16,10 +16,7 @@ public class SkeletonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int mItemCount;
     private int mLayoutReference;
     private int[] mLayoutArrayReferences;
-    private int mColor;
-    private boolean mShimmer;
-    private int mShimmerDuration;
-    private int mShimmerAngle;
+    private boolean mShimmerAnimate;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -27,7 +24,7 @@ public class SkeletonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (doesArrayOfLayoutsExist()) {
             mLayoutReference = viewType;
         }
-        if (mShimmer) {
+        if (mShimmerAnimate) {
             return new ShimmerViewHolder(inflater, parent, mLayoutReference);
         }
 
@@ -37,12 +34,11 @@ public class SkeletonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (mShimmer) {
-            ShimmerLayout layout = (ShimmerLayout) holder.itemView;
-            layout.setShimmerAnimationDuration(mShimmerDuration);
-            layout.setShimmerAngle(mShimmerAngle);
-            layout.setShimmerColor(mColor);
-            layout.startShimmerAnimation();
+        if (mShimmerAnimate) {
+            ShimmerFrameLayout layout = (ShimmerFrameLayout) holder.itemView;
+
+            layout.setShimmer(mShimmer);
+            layout.startShimmer();
         }
     }
 
@@ -76,21 +72,15 @@ public class SkeletonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.mItemCount = itemCount;
     }
 
-    public void setShimmerColor(int color) {
-        this.mColor = color;
-    }
-
-    public void shimmer(boolean shimmer) {
+    private Shimmer mShimmer;
+    public void setShimmer(Shimmer shimmer) {
         this.mShimmer = shimmer;
     }
 
-    public void setShimmerDuration(int shimmerDuration) {
-        this.mShimmerDuration = shimmerDuration;
+    public void shimmerAnimate(boolean shimmer) {
+        this.mShimmerAnimate = shimmer;
     }
 
-    public void setShimmerAngle(@IntRange(from = 0, to = 30) int shimmerAngle) {
-        this.mShimmerAngle = shimmerAngle;
-    }
 
     public int getCorrectLayoutItem(int position) {
         if(doesArrayOfLayoutsExist()) {
