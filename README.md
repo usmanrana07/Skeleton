@@ -50,5 +50,5 @@ The library provides Shimmer animation effect in RecyclerView Adapters and Views
         
  # Thanks
  
- https://github.com/team-supercharge/ShimmerLayout
+ https://github.com/facebook/shimmer-android
  
