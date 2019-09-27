@@ -171,7 +171,7 @@ public class ViewSkeletonScreen implements SkeletonScreen {
         }
 
         public ViewSkeletonScreen.Builder shimmerBaseColor(@ColorRes int shimmerBaseColor) {
-            this.mShimmerBaseColor = shimmerBaseColor;
+            this.mShimmerBaseColor = ContextCompat.getColor(mView.getContext(), shimmerBaseColor);
             return this;
         }
 

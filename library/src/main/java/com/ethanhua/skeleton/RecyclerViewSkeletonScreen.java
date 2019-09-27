@@ -139,7 +139,7 @@ public class RecyclerViewSkeletonScreen implements SkeletonScreen {
         }
 
         public Builder shimmerBaseColor(@ColorRes int shimmerBaseColor) {
-            this.mShimmerBaseColor = shimmerBaseColor;
+            this.mShimmerBaseColor = ContextCompat.getColor(mRecyclerView.getContext(), shimmerBaseColor);
             return this;
         }
 
