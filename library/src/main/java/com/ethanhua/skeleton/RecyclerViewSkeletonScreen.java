@@ -62,9 +62,17 @@ public class RecyclerViewSkeletonScreen implements SkeletonScreen {
         private boolean mFrozen = true;
 
         public Builder(RecyclerView recyclerView) {
+
+            this(recyclerView, null);
+        }
+
+        public Builder(RecyclerView recyclerView, Shimmer shimmer) {
             this.mRecyclerView = recyclerView;
             this.mShimmerHighlightColor = ContextCompat.getColor(recyclerView.getContext(), R.color.shimmer_highlight_color);
             this.mShimmerBaseColor = ContextCompat.getColor(recyclerView.getContext(), R.color.shimmer_base_color);
+            mShimmerColored = true;
+            mShimmer = shimmer;
+            mAutoStart = true;
         }
 
         /**
